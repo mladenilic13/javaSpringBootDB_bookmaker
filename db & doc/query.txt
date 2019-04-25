@@ -1,0 +1,30 @@
+select idrk, tiprk, iznosrk, vremerk, fkidkorisnik,
+
+null as idtiket, null as fkidkorisnik, null as idkorisnik,
+
+null as nazivkorisnik, null as emailkorisnik from racunkorisnik
+
+where racunkorisnik.fkidkorisnik = 1
+
+and racunkorisnik.vremerk > '2019-01-01 00:00:00'
+
+and racunkorisnik.vremerk < '2019-03-01 00:00:00'
+
+union
+
+select * from racuntiket
+
+inner join tiket on racuntiket.fkidtiket = tiket.idtiket
+
+inner join korisnik on korisnik.idkorisnik = tiket.fkidkorisnik
+
+where tiket.fkidkorisnik = 1
+
+and racuntiket.vremert > '2019-01-01 00:00:00'
+
+and racuntiket.vremert < '2019-03-01 00:00:00'
+
+order by vremerk
+
+
+UPDATE `kladionica2`.`utakmica` SET `flagutakmica` = null;

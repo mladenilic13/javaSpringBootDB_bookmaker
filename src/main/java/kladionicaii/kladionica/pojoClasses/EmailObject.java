@@ -1,4 +1,4 @@
-package kladionicaii.kladionica.email;
+package kladionicaii.kladionica.pojoClasses;
 
 public class EmailObject {
 	

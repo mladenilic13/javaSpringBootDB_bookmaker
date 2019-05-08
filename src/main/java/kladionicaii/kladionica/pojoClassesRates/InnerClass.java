@@ -1,4 +1,4 @@
-package kladionicaii.kladionica.valute;
+package kladionicaii.kladionica.pojoClassesRates;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

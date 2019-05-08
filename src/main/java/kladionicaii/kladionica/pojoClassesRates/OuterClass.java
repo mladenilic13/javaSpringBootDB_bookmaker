@@ -1,4 +1,4 @@
-package kladionicaii.kladionica.valute;
+package kladionicaii.kladionica.pojoClassesRates;
 
 //@JsonIgnoreProperties(ignoreUnknown = true)
 public class OuterClass {

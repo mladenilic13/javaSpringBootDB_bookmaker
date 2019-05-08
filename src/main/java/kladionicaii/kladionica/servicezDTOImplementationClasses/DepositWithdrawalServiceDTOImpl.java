@@ -17,10 +17,10 @@ import org.springframework.web.client.RestTemplate;
 
 import kladionicaii.kladionica.daoClasses.AccountDao;
 import kladionicaii.kladionica.pojoClasses.Account;
+import kladionicaii.kladionica.pojoClassesRates.InnerClass;
+import kladionicaii.kladionica.pojoClassesRates.OuterClass;
 import kladionicaii.kladionica.pojoDTOClasses.DepositWithdrawalDTO;
 import kladionicaii.kladionica.servicezDTOClasses.DepositWithdrawalServiceDTO;
-import kladionicaii.kladionica.valute.InnerClass;
-import kladionicaii.kladionica.valute.OuterClass;
 
 @Service
 public class DepositWithdrawalServiceDTOImpl implements DepositWithdrawalServiceDTO {

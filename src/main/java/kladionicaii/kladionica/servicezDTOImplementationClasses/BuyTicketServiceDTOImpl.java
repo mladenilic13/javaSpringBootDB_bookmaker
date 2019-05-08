@@ -28,19 +28,15 @@ import kladionicaii.kladionica.servicezDTOClasses.BuyTicketServiceDTO;
 public class BuyTicketServiceDTOImpl implements BuyTicketServiceDTO {
 
 	private GameTicketDao gameTicketRepository;
-	
 	private AccountDao accountRepository;
-	
 	private TicketDao ticketRepository;
-	
 	private UserDao userRepository;
-	
 	private GameDao gameRepository;
 	
 	@Autowired
 	public BuyTicketServiceDTOImpl(GameTicketDao gameTicketRepository,
-			AccountDao accountRepository, TicketDao ticketRepository, UserDao userRepository,
-			GameDao gameRepository) {
+			AccountDao accountRepository, TicketDao ticketRepository, 
+			UserDao userRepository, GameDao gameRepository) {
 		this.gameTicketRepository = gameTicketRepository;
 		this.accountRepository = accountRepository;
 		this.ticketRepository = ticketRepository;
@@ -98,9 +94,7 @@ public class BuyTicketServiceDTOImpl implements BuyTicketServiceDTO {
 		return buyTicketDTO;
 	}
 
-	
-
-	// test
+	// return input json
 	@Override
 	public BuyTicketDTO customOutput() {
 		

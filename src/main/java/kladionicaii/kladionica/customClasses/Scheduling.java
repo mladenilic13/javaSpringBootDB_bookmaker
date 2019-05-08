@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,9 @@ import kladionicaii.kladionica.daoClasses.TicketDao;
 import kladionicaii.kladionica.daoClasses.GameDao;
 import kladionicaii.kladionica.daoClasses.GameTicketDao;
 import kladionicaii.kladionica.pojoClasses.User;
+import kladionicaii.kladionica.serviceSEmailClasses.EmailService;
 import kladionicaii.kladionica.pojoClasses.Account;
+import kladionicaii.kladionica.pojoClasses.EmailObject;
 import kladionicaii.kladionica.pojoClasses.Ticket;
 import kladionicaii.kladionica.pojoClasses.Game;
 import kladionicaii.kladionica.pojoClasses.GameTicket;
@@ -34,20 +37,22 @@ public class Scheduling {
 	private GameTicketDao gameTicketRepository;
 	private AccountDao accountRepository;
 	private JavaMailSender javaMailSender;
+	private EmailService emailService;
 	
 	@Autowired
 	public Scheduling(GameDao utakmicaRepository, TicketDao tiketRepository,
 			GameTicketDao utakmicaTiketRepository, AccountDao racunRepository, 
-			JavaMailSender javaMailSender) {
+			JavaMailSender javaMailSender, EmailService emailService) {
 		this.gameRepository = utakmicaRepository;
 		this.ticketRepository = tiketRepository;
 		this.gameTicketRepository = utakmicaTiketRepository;
 		this.accountRepository = racunRepository;
 		this.javaMailSender = javaMailSender;
+		this.emailService = emailService;
 	}
 	
 	// simple mail message
-	private void sendmail(String text, String email) {
+	private void sendSimple(String text, String email) {
 		SimpleMailMessage message = new SimpleMailMessage(); 
         message.setTo(email); 
         message.setSubject("results"); 
@@ -55,8 +60,8 @@ public class Scheduling {
         javaMailSender.send(message);
 	}
 	
-	// complex mail message 
-    private void sendmailComplex(String text, String email) throws MessagingException {
+	// mime mail message 
+    private void sendMime(String text, String email) throws MessagingException {
     	MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setSubject("results");
@@ -66,6 +71,24 @@ public class Scheduling {
         javaMailSender.send(mimeMessage);
 	}
 	
+    // mime mail message using template
+    public void sendMimeTemplate(EmailObject emailObject) {
+    	MimeMessagePreparator messagePreparator = new MimeMessagePreparator() {
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				// MimeMessageHelper is decorator for MimeMessage
+				MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+	            messageHelper.setFrom("electrohhh@gmail.com");
+	            messageHelper.setTo(emailObject.getEmail());
+	            messageHelper.setSubject(emailObject.getSubject());
+	            String content = emailService.build(emailObject);
+	            messageHelper.setText(content, true);
+			}
+    	};
+    	javaMailSender.send(messagePreparator);
+//    	this.javaMailSender.send(messagePreparator);
+    }
+    
 	@Transactional
 	public void reward(BigDecimal amount, User user) {
 		Account account = new Account("reward", amount, LocalDateTime.now(), user);
@@ -97,21 +120,21 @@ public class Scheduling {
 	
 	public void processing() throws MessagingException {
 		
-		// ne obradjeni tiketi
+		// unprocessed tickets
 		List<Ticket> tickets = ticketRepository.findByProcessed(0);
 		
 		System.out.println();
 		System.out.println("list of unprocessed tickets " + tickets.toString());
 		
 		for(Ticket ticket : tickets) {
-			
+
 			System.out.println();
 			System.out.println("    ticket in question " + ticket.toString());
-			
+
 			int ticketSize = 0;
 			int numOfPlayedGames = 0;
 			int numOfHits = 0;
-			
+
 			BigDecimal valueOfTicket = ticket.getAmount();
 			BigDecimal reward = valueOfTicket;
 
@@ -166,8 +189,13 @@ public class Scheduling {
 					String text = "from total of " + ticketSize + 
 							" of games you had " + numOfHits + 
 							" hits. more like next time.";
-//						sendmail(text, tiket.getKorisnik().getEmail());
-						sendmailComplex(text, ticket.getUser().getEmail());
+//					sendSimple(text, ticket.getUser().getEmail());
+//					sendMime(text, ticket.getUser().getEmail());
+					
+					EmailObject emailObject = 
+							new EmailObject(ticket.getUser().getEmail(),
+									"games results", text);
+					sendMimeTemplate(emailObject);
 					
 					System.out.println("    " + text);
 					
@@ -175,8 +203,13 @@ public class Scheduling {
 					String text = "from total of " + ticketSize + 
 							" of games you had " + numOfHits + " hits." +
 							" Congratulations your reward is " + reward + " eura.";
-//						sendmail(text, tiket.getKorisnik().getEmail());
-						sendmailComplex(text, ticket.getUser().getEmail());
+//					sendSimplel(text, ticket.getUser().getEmail());
+//					sendMime(text, ticket.getUser().getEmail());
+					
+					EmailObject emailObject = 
+							new EmailObject(ticket.getUser().getEmail(),
+									"games results", text);
+					sendMimeTemplate(emailObject);
 					
 					System.out.println("    " + text);
 					

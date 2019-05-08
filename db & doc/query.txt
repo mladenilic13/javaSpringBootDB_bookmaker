@@ -27,4 +27,4 @@ and racuntiket.vremert < '2019-03-01 00:00:00'
 order by vremerk
 
 
-UPDATE `kladionica2`.`utakmica` SET `flagutakmica` = null;
+UPDATE `bookie`.`game` SET `flag` = null;

@@ -6,10 +6,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+
 import kladionicaii.kladionica.daoClasses.UserDao;
 import kladionicaii.kladionica.exceptions.UserNotFoundException;
+import kladionicaii.kladionica.pojoClasses.QUser;
 import kladionicaii.kladionica.pojoClasses.User;
 import kladionicaii.kladionica.serviceClasses.UserService;
+import kladionicaii.kladionica.utility.CollectionConversion;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -73,6 +77,15 @@ public class UserServiceImpl implements UserService {
 	public void deleteByObject(User user) {
 		userRepository.delete(user);
 		
+	}
+	
+	// querydsl content
+	public Iterable<User> findAllQdsl() {
+		QUser user = QUser.user;
+		BooleanExpression name = user.name.eq("mladen");
+		BooleanExpression pass = user.pass.eq("sekira");
+		Iterable<User> users =  userRepository.findAll(name.and(pass));
+		return users;
 	}
 	
 }

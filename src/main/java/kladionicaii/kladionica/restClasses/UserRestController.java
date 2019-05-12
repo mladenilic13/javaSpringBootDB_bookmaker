@@ -19,11 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kladionicaii.kladionica.pojoClasses.User;
 import kladionicaii.kladionica.serviceClasses.UserService;
+import kladionicaii.kladionica.serviceImplementationClasses.UserServiceImpl;
 import kladionicaii.kladionica.serviceSecurityClasses.LoginService;
 
 @RestController
 @RequestMapping("/api")
 public class UserRestController {
+	
+	// only for querydsl (can go through service interface also if needed)
+	@Autowired
+	private UserServiceImpl userServiceImpl;
 	
 	@Autowired
 	private UserService userService;
@@ -85,6 +90,12 @@ public class UserRestController {
 	@PostMapping("/user/login")
 	public String getToken(@RequestBody User user) {
 		return loginService.allowAccessUser(user);
+	}
+	
+	// querydsl
+	@GetMapping("/user/findallqdsl")
+	public Iterable<User> findAllQdsl() {
+		return userServiceImpl.findAllQdsl();
 	}
 	
 }

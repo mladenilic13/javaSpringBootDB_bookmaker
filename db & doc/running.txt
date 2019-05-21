@@ -1,0 +1,4 @@
+to run program set email/pass in properties
+
+to run tests disable security filters,
+put only one user in database

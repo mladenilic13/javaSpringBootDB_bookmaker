@@ -15,6 +15,8 @@ import kladionicaii.kladionica.pojoDTOClasses.SearchOutputDTO;
 public interface UserDao extends JpaRepository<User, Integer>, QuerydslPredicateExecutor<User>{
 	
 	User findByNameAndPass(String name, String pass);
+	
+	User findByName(String name);
 
 	// time in form '2019-01-01 00:00:00'
 	@Query(	value = 

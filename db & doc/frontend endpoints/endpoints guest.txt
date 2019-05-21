@@ -1,0 +1,13 @@
+
+guest actions
+
+return all games not played yet @@@@@@@@@@@@@
+(get) http://localhost:8080/api/notplayedyet
+
+registration @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+(post) http://localhost:8080/api/registration
+	{
+	    "name": "sir",
+	    "email": "mladenilic79@gmail.com",
+	    "pass": "sekira"
+	}

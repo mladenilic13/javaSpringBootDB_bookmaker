@@ -1,3 +1,4 @@
+
 package kladionicaii.kladionica.serviceSecurityClasses;
 
 import java.io.IOException;
@@ -73,7 +74,7 @@ public class FilterService implements Filter {
 			Jws<Claims> jws = loginService.checkToken(token);
 			String scope = (String) jws.getBody().get("scope");
 			if(scope.equals("admin")) {
-				// namena ovoga
+				// check for what this is used for
 //				String korisnikNaziv = jws.getBody().getSubject();
 //				httpRequest.setAttribute("korisnikNaziv", korisnikNaziv);
 				chain.doFilter(request, response);

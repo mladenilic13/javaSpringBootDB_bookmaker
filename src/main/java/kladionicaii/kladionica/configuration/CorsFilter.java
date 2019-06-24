@@ -23,6 +23,9 @@ public class CorsFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 		
+		System.out.println("CORSFilter HTTP Request: " + request.getMethod());
+		
+		// Authorize (allow) all domains to consume the content
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
 		response.setHeader("Access-Control-Max-Age", "3600");
@@ -30,7 +33,13 @@ public class CorsFilter implements Filter {
 //		response.setHeader("Access-Control-Allow-Headers",
 //				"Content-Type, Authorization, Content-Length, X-Requested-With");
 		
-		chain.doFilter(req, res);
+		// For HTTP OPTIONS method reply with ACCEPTED status code per CORS handshake
+//        if (request.getMethod().equals("OPTIONS")) {
+//            response.setStatus(HttpServletResponse.SC_ACCEPTED);
+//            return;
+//        }
+		
+		chain.doFilter(request, response);
 	}
-
+	
 }
